@@ -1,0 +1,9 @@
+gameName = "Mushgame"
+
+def startGame()
+{
+    print(gameName)
+    print("Ready to build")
+}
+
+startGame()

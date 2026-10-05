@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Mushgame: run",
+      "type": "process",
+      "command": "python3",
+      "windows": {
+        "command": "py"
+      },
+      "args": [
+        "interpreter.py",
+        "main.mylang"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
