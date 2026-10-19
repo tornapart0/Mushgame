@@ -1,6 +1,8 @@
 # Mushgame
 
-My game. I am building it with [Tay's Sensible Lang](https://github.com/tornapart0/tays-sensible-lang).
+An early mushroom game prototype built with [Tay's Sensible Lang](https://github.com/tornapart0/tays-sensible-lang) and Pygame. Move the mushroom with WASD.
+
+Download a Mac or Windows build from the [Releases page](https://github.com/tornapart0/Mushgame/releases). Each Mac ZIP contains an app. The Windows ZIP contains a folder; extract it and run `Mushgame.exe` inside the folder.
 
 Open this folder in VS Code and start editing `main.mylang`. Set up the environment once, then press Cmd+Shift+B to run it. From the project folder:
 

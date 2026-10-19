@@ -1,0 +1,68 @@
+name: Build downloads
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            name: macOS-Apple-Silicon
+          - os: macos-15-intel
+            name: macOS-Intel
+          - os: windows-2025
+            name: Windows-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pyinstaller==6.22.3
+      - name: Check game syntax
+        run: python interpreter.py --check main.mylang
+      - name: Build Mac app
+        if: runner.os == 'macOS'
+        run: pyinstaller --noconfirm --clean --windowed --name Mushgame --add-data 'main.mylang:.' --add-data 'Game images:Game images' --hidden-import pygame launcher.py
+      - name: Build Windows app
+        if: runner.os == 'Windows'
+        run: pyinstaller --noconfirm --clean --windowed --name Mushgame --add-data 'main.mylang;.' --add-data 'Game images;Game images' --hidden-import pygame launcher.py
+      - name: Package Mac app
+        if: runner.os == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent dist/Mushgame.app Mushgame-${{ matrix.name }}.zip
+      - name: Package Windows app
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path dist/Mushgame -DestinationPath Mushgame-${{ matrix.name }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mushgame-${{ matrix.name }}
+          path: Mushgame-${{ matrix.name }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: Mushgame-*
+          path: release
+          merge-multiple: true
+      - name: Publish downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create '${{ github.ref_name }}' release/*.zip \
+            --repo '${{ github.repository }}' \
+            --title 'Mushgame prototype ${{ github.ref_name }}' \
+            --notes 'Early Mushgame prototype. Move the mushroom with WASD. Choose the download for your computer.'

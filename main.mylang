@@ -1,9 +1,69 @@
+import pygame
+from pathlib import Path
 gameName = "Mushgame"
 
+def pygameStarter(){
+# pygame setup
+BLUE = (105, 255, 25)
+pygame.init()
+screen = pygame.display.set_mode((1280, 720))
+pygame.display.set_caption("Mushgame")
+clock = pygame.time.Clock()
+running = True
+dt = 0
+assets = Path(__file__).resolve().parent / "Game images"
+bg_image = pygame.image.load(str(assets / "parallax-mountain-animX1.gif")).convert()
+bg_image = pygame.transform.scale(bg_image, screen.get_size())
+ch_image = pygame.image.load(str(assets / "mushroom.png")).convert_alpha()
+
+player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+font = pygame.font.Font(None, 36)
+
+while running{
+
+    # poll for events
+    # pygame.QUIT event means the user clicked X to close your window
+    for event in pygame.event.get(){
+        if event.type == pygame.QUIT{
+            running = False}
+    }
+    # Draw the background before the player and text.
+    screen.blit(bg_image, (0, 0))
+    text_surface = font.render("Hello Mushroom traveler welcome to the game use WASD to navigate", True, BLUE)
+    screen.blit(ch_image, player_pos)
+    screen.blit(text_surface, (100, 150))
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]{
+        player_pos.y -= 300 * dt}
+    if keys[pygame.K_s]{
+        player_pos.y += 300 * dt}
+    if keys[pygame.K_a]{
+        player_pos.x -= 300 * dt}
+    if keys[pygame.K_d]{
+        player_pos.x += 300 * dt}
+    pygame.display.flip()
+
+    # limits FPS to 60
+    # dt is delta time in seconds since last frame, used for framerate-
+    # independent physics.
+    dt = clock.tick(60) / 1000
+}
+pygame.quit()
+}
 def startGame()
 {
     print(gameName)
     print("Ready to build")
+    pygameStarter()
+
+}
+
+def gameVariables()
+{
+    charName = input("what would you like your name to be?")
+    cookingMushroomTypes = ["Button_mushroom", "Shiitake", "Portobello", "Oyster", "Cremini", "Enoki", "Maitake", "Porcini", "Morel", "Chanterelle"]
+    foragedMushroomTypes =[]
+
 }
 
 startGame()
